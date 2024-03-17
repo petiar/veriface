@@ -1,0 +1,10 @@
+entity.veriface_verification_result.edit_form:
+  route_name: entity.veriface_verification_result.edit_form
+  group: veriface_verification_result
+  title: 'Edit'
+
+entity.veriface_verification_result.delete_form:
+  route_name: entity.veriface_verification_result.delete_form
+  group: veriface_verification_result
+  title: 'Delete'
+  weight: 10

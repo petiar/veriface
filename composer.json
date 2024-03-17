@@ -1,0 +1,12 @@
+{
+    "name": "VeriFace Drupal module",
+    "require": {
+        "veriface/veriface": "^1.0"
+    },
+    "authors": [
+        {
+            "name": "Peter Lachky",
+            "email": "petiar@petiar.sk"
+        }
+    ]
+}

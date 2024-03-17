@@ -1,0 +1,103 @@
+<?php
+
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
+use Drupal\veriface\Entity\VeriFaceVerificationResult;
+use veriface\VeriFace;
+use Drupal\Core\Render\Element;
+use Drupal\user\UserInterface;
+
+
+/**
+ * @file
+ * Primary module hooks for VeriFace module.
+ */
+
+function veriface_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+}
+
+function veriface_user_update(EntityInterface $user) {
+  $session_id = $user->get('field_veriface')->first()->session_id;
+  $veriface = VeriFace::byApiKey(\Drupal::config('veriface.settings')->get('api_key'));
+  $vf = $veriface->getVerification($session_id);
+
+  $result = VeriFaceVerificationResult::create([
+    'label' => 'Verification result for ' . $session_id,
+    'description' => serialize($vf),
+  ])->save();
+}
+
+/**
+ * Implements hook_theme().
+ */
+function veriface_theme(): array {
+  return [
+    'veriface_verification_result' => ['render element' => 'elements'],
+  ];
+}
+
+/**
+ * Prepares variables for verface verification result templates.
+ *
+ * Default template: veriface-verification-result.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An associative array containing the verface verification result information and any
+ *     fields attached to the entity.
+ *   - attributes: HTML attributes for the containing element.
+ */
+function template_preprocess_veriface_verification_result(array &$variables): void {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function veriface_user_cancel($edit, UserInterface $account, $method): void {
+  switch ($method) {
+    case 'user_cancel_block_unpublish':
+      // Unpublish verface verification results.
+      $storage = \Drupal::entityTypeManager()->getStorage('veriface_verification_result');
+      $veriface_verification_result_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->condition('status', 1)
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($veriface_verification_result_ids) as $veriface_verification_result) {
+        $veriface_verification_result->set('status', FALSE)->save();
+      }
+      break;
+
+    case 'user_cancel_reassign':
+      // Anonymize verface verification results.
+      $storage = \Drupal::entityTypeManager()->getStorage('veriface_verification_result');
+      $veriface_verification_result_ids = $storage->getQuery()
+        ->condition('uid', $account->id())
+        ->accessCheck(FALSE)
+        ->execute();
+      foreach ($storage->loadMultiple($veriface_verification_result_ids) as $veriface_verification_result) {
+        $veriface_verification_result->setOwnerId(0)->save();
+      }
+      break;
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_predelete() for user entities.
+ */
+function veriface_user_predelete(UserInterface $account): void {
+  // Delete verface verification results that belong to this account.
+  $storage = \Drupal::entityTypeManager()->getStorage('veriface_verification_result');
+  $veriface_verification_result_ids = $storage->getQuery()
+    ->condition('uid', $account->id())
+    ->accessCheck(FALSE)
+    ->execute();
+  $storage->delete(
+    $storage->loadMultiple($veriface_verification_result_ids)
+  );
+}

@@ -1,0 +1,23 @@
+veriface.example:
+  path: '/veriface/open-verification'
+  defaults:
+    _controller: '\Drupal\veriface\Controller\VerifaceController::openVerification'
+    _title: 'Open Verification'
+  requirements:
+    _permission: 'access content'
+
+veriface.settings_form:
+  path: '/admin/config/system/veriface'
+  defaults:
+    _title: 'Veriface settings'
+    _form: '\Drupal\veriface\Form\VerifaceSettingsForm'
+  requirements:
+    _permission: 'administer veriface configuration'
+
+entity.veriface_verification_result.settings:
+  path: 'admin/structure/veriface-verification-result'
+  defaults:
+    _form: '\Drupal\veriface\Form\VeriFaceVerificationResultSettingsForm'
+    _title: 'VerFace Verification Result'
+  requirements:
+    _permission: 'administer veriface_verification_result'

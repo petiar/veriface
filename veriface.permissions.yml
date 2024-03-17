@@ -1,0 +1,8 @@
+administer veriface configuration:
+  title: 'Administer veriface configuration'
+  description: 'Allows user to administer VeriFace API keys and related settings. Grant with care!'
+  restrict access: true
+
+administer veriface_verification_result:
+  title: 'Administer verface verification results'
+  restrict access: true

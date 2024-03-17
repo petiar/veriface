@@ -1,0 +1,5 @@
+name: 'VeriFace'
+type: module
+description: 'API to connect to Veriface service'
+package: Custom
+core_version_requirement: ^10 || ^11

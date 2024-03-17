@@ -1,0 +1,5 @@
+services:
+  veriface.event_subscriber:
+    class: Drupal\veriface\EventSubscriber
+    tags:
+      - { name: 'event_subscriber' }

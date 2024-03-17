@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - veriface
+id: veriface_verification_result_delete_action
+label: 'Delete verface verification results'
+type: veriface_verification_result
+plugin: entity:delete_action:veriface_verification_result
+configuration: {  }

@@ -1,0 +1,13 @@
+embed-verification:
+  version: 1.x
+  js:
+    js/embed.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupal.dialog
+
+veriface_deleteme:
+  css:
+    component:
+      css/veriface-deleteme-widget.css: {}

@@ -1,0 +1,5 @@
+veriface_verification_result.add_form:
+  title: 'Add verface verification result'
+  route_name: entity.veriface_verification_result.add_form
+  appears_on:
+    - entity.veriface_verification_result.collection

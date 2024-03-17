@@ -1,0 +1,18 @@
+veriface.admin:
+  title: 'VeriFace settings'
+  description: 'Verious settings for the Veriface module'
+  route_name: veriface.settings_form
+  parent: system.admin_config_services
+  menu_name: veriface
+
+entity.veriface_verification_result.settings:
+  title: 'VerFace Verification Result'
+  description: 'Configure a VerFace Verification Result entity type.'
+  route_name:  entity.veriface_verification_result.settings
+  parent: system.admin_structure
+
+entity.veriface_verification_result.collection:
+  title: 'VerFace Verification Results'
+  description: 'List of verface verification results.'
+  route_name: entity.veriface_verification_result.collection
+  parent: system.admin_content
