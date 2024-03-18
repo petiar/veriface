@@ -1,6 +1,10 @@
 {
-    "name": "VeriFace Drupal module",
+    "name": "petiar/veriface",
+    "description": "A Drupal module to be able to verify users using the VeriFace service.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
     "require": {
+        "php": ">=7.3",
         "veriface/veriface": "^1.0"
     },
     "authors": [
