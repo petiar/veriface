@@ -3,3 +3,7 @@ services:
     class: Drupal\veriface\EventSubscriber
     tags:
       - { name: 'event_subscriber' }
+
+  veriface.verification:
+    class: Drupal\veriface\Verification
+    arguments: ['@config.factory', '@current_user']

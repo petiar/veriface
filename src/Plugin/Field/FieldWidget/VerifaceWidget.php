@@ -7,6 +7,7 @@ namespace Drupal\veriface\Plugin\Field\FieldWidget;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\veriface\Verification;
 
 /**
  * Defines the 'veriface_embed_verification' field widget.
@@ -75,6 +76,13 @@ final class VerifaceWidget extends WidgetBase {
       '#default_value' => $items[$delta]->status ?? NULL,
     ];
 
+    /**
+     * @var Verification $verification
+     */
+    $verification = \Drupal::service('veriface.verification');
+    if ($verification->isVerificationFinished()) {
+      dsm('finished');
+    }
     $element['modal'] = [
       '#type' => 'item',
       '#description' => 'Po kliknutí na toto tlačidlo budete požiadaný o overenie totožnosti. Celý proces prebieha vo Vašom prehliadači.',

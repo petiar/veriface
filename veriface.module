@@ -28,6 +28,20 @@ function veriface_user_update(EntityInterface $user) {
   ])->save();
 }
 
+function veriface_user_load($entities) {
+  if (count($entities) ===  1) {
+    $user_id = array_keys($entities)[0];
+
+    $user = $entities[$user_id];
+    if (isset($user->get('field_veriface')->first()->session_id)) {
+      $session_id = $user->get('field_veriface')->first()->session_id;
+      $veriface = VeriFace::byApiKey(\Drupal::config('veriface.settings')
+        ->get('api_key'));
+      $vf = $veriface->findVerificationBySessionId($session_id);
+    }
+  }
+}
+
 /**
  * Implements hook_theme().
  */
