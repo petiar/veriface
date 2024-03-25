@@ -81,7 +81,7 @@ final class VerifaceWidget extends WidgetBase {
      */
     $verification = \Drupal::service('veriface.verification');
     $status = $verification->getVerificationStatus();
-    if (in_array($status['machine'], $verification::END_STATES)) {
+    if ($status && in_array($status['machine'], $verification::END_STATES)) {
       // we have terminal status, we will display only a message without button
       switch ($status['machine']) {
         case 'VERIFIED':

@@ -54,7 +54,7 @@ final class Verification implements ContainerInjectionInterface {
    */
   public function __construct(
     protected ConfigFactoryInterface $configFactory,
-    private readonly AccountProxy $account
+    private AccountProxy $account
   ) {
     $this->veriface = VeriFace::byApiKey($this->configFactory->get('veriface.settings')->get('api_key'));
     $user = User::load($this->account->id());
@@ -77,11 +77,12 @@ final class Verification implements ContainerInjectionInterface {
       if (isset($vf[0]) && $vf[0] instanceof VerificationListDto) {
         $result = $vf[0]->status;
       }
+      $result = [
+        'machine' => $result,
+        'human' => self::STATUSES[$result],
+      ];
     }
-    return [
-      'machine' => $result,
-      'human' => self::STATUSES[$result],
-    ];
+    return $result;
   }
 
   public static function create(ContainerInterface $container) {
