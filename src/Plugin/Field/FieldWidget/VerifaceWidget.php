@@ -80,15 +80,30 @@ final class VerifaceWidget extends WidgetBase {
      * @var Verification $verification
      */
     $verification = \Drupal::service('veriface.verification');
-    if ($verification->isVerificationFinished()) {
-      dsm('finished');
+    $status = $verification->getVerificationStatus();
+    if (in_array($status['machine'], $verification::END_STATES)) {
+      // we have terminal status, we will display only a message without button
+      switch ($status['machine']) {
+        case 'VERIFIED':
+        case 'VERIFIED_WARNING':
+        case 'VERIFIED_MANUAL':
+          $message = 'Overenie bolo úspešné. Stav: ' . $status['human'];
+          break;
+        default:
+          $message = 'Pri overovaní nastali problémy. ' . $status['human'] . ' Kontaktuje administrátora a uveďte toto číslo: ' . $verification->getSessionId();
+      }
+      $element['stop'] = [
+        '#type' => 'item',
+        '#markup' => $message,
+      ];
     }
-    $element['modal'] = [
-      '#type' => 'item',
-      '#description' => 'Po kliknutí na toto tlačidlo budete požiadaný o overenie totožnosti. Celý proces prebieha vo Vašom prehliadači.',
-      '#markup' => '<div class="button" id="openVerificationModal">Overiť totožnosť</div>',
-    ];
-
+    else {
+      $element['modal'] = [
+        '#type' => 'item',
+        '#description' => 'Po kliknutí na toto tlačidlo budete požiadaný o overenie totožnosti. Celý proces prebieha vo Vašom prehliadači.',
+        '#markup' => '<div id="verification-messages"></div><div class="button" id="openVerificationModal">Overiť totožnosť</div><div id="embed-dialog"></div>',
+      ];
+    }
     return $element;
   }
 

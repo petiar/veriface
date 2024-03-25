@@ -17,10 +17,25 @@ use Drupal\user\UserInterface;
 function veriface_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 }
 
-function veriface_user_update(EntityInterface $user) {
+function veriface_user_presave(EntityInterface $user) {
+  /**
+   * @var \Drupal\user\Entity\User $user
+   */
   $session_id = $user->get('field_veriface')->first()->session_id;
   $veriface = VeriFace::byApiKey(\Drupal::config('veriface.settings')->get('api_key'));
   $vf = $veriface->getVerification($session_id);
+
+  if (str_starts_with($vf->status, 'VERIFIED')) {
+    $roles = \Drupal::config('veriface.settings')->get('roles');
+    if ($roles) {
+      foreach ($roles as $key => $role) {
+        $user->addRole($key);
+      }
+    }
+
+  }
+
+  $user->field_veriface->status = $vf->status;
 
   $result = VeriFaceVerificationResult::create([
     'label' => 'Verification result for ' . $session_id,
@@ -33,7 +48,7 @@ function veriface_user_load($entities) {
     $user_id = array_keys($entities)[0];
 
     $user = $entities[$user_id];
-    if (isset($user->get('field_veriface')->first()->session_id)) {
+    if (isset($user->get('field_veriface')->first()->session_id) && $user->get('field_veriface')->first()->session_id) {
       $session_id = $user->get('field_veriface')->first()->session_id;
       $veriface = VeriFace::byApiKey(\Drupal::config('veriface.settings')
         ->get('api_key'));
@@ -114,4 +129,21 @@ function veriface_user_predelete(UserInterface $account): void {
   $storage->delete(
     $storage->loadMultiple($veriface_verification_result_ids)
   );
+}
+
+function veriface_add_role_to_user($user) {
+  $roles = \Drupal::config('veriface.settings')->get('roles');
+  if ($roles) {
+    foreach ($roles as $key => $role) {
+      $user->addRole($key);
+    }
+  }
+}
+
+function veriface_create_entity($session_id, $vf) {
+  $result = VeriFaceVerificationResult::create([
+    'label' => 'Verification result for ' . $session_id,
+    'description' => serialize($vf),
+  ])->save();
+  return $result;
 }

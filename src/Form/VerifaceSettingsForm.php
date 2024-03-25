@@ -30,6 +30,15 @@ final class VerifaceSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
+    /**
+     * @var \Drupal\user\Entity\Role[] $user_roles
+     */
+    $user_roles = \Drupal::entityTypeManager()->getStorage('user_role')->loadMultiple();
+
+    $roles_list = array_map(function($role) {
+      return $role->label();
+    }, $user_roles);
+
     $form['api_key'] = [
       '#type' => 'textfield',
       '#title' => $this->t('VeriFace API key'),
@@ -47,6 +56,16 @@ LINK_LONG - creates a longer alphanumeric string to open the verification sessio
         'LINK_LONG' => 'LINK_LONG',
       ],
     ];
+
+    $form['roles'] = [
+      '#type' => 'select',
+      '#title' => t('Role to activate'),
+      '#description' => t('Select which role(s) to activate after successful verification.'),
+      '#default_value' => $this->config('veriface.settings')->get('roles') ? $this->config('veriface.settings')->get('roles') : [],
+      '#options' => $roles_list,
+      '#multiple' => TRUE,
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -74,6 +93,7 @@ LINK_LONG - creates a longer alphanumeric string to open the verification sessio
     $this->config('veriface.settings')
       ->set('api_key', $form_state->getValue('api_key'))
       ->set('link_type', $form_state->getValue('link_type'))
+      ->set('roles', $form_state->getValue('roles'))
       ->save();
     parent::submitForm($form, $form_state);
   }

@@ -1,8 +1,27 @@
-veriface.example:
+veriface.open:
   path: '/veriface/open-verification'
   defaults:
     _controller: '\Drupal\veriface\Controller\VerifaceController::openVerification'
     _title: 'Open Verification'
+  requirements:
+    _permission: 'access content'
+veriface.get:
+  path: '/veriface/get-verification/{session_id}'
+  defaults:
+    _controller: '\Drupal\veriface\Controller\VerifaceController::getVerification'
+    _title: 'Get Verification'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      session_id:
+        type: string
+veriface.save:
+  path: '/veriface/save-verification'
+  methods:
+    - POST
+  defaults:
+    _controller: '\Drupal\veriface\Controller\VerifaceController::saveVerification'
   requirements:
     _permission: 'access content'
 
