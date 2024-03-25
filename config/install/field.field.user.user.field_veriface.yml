@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_veriface
+  module:
+    - user
+    - veriface
+  enforced:
+    module:
+      - veriface
+id: user.user.field_veriface
+field_name: field_veriface
+entity_type: user
+bundle: user
+label: Veriface
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  veriface_api_key: ''
+field_type: veriface_veriface

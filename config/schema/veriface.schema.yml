@@ -1,0 +1,17 @@
+# Default value.
+field.value.veriface_veriface:
+  type: mapping
+  label: Default value
+  mapping:
+    open_code:
+      type: string
+      label: Open Code
+    session_id:
+      type: string
+      label: Session ID
+    status:
+      type: string
+      label: Status
+    valid_until:
+      type: integer
+      label: Valid until

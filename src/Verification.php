@@ -58,7 +58,9 @@ final class Verification implements ContainerInjectionInterface {
   ) {
     $this->veriface = VeriFace::byApiKey($this->configFactory->get('veriface.settings')->get('api_key'));
     $user = User::load($this->account->id());
-    $this->session_id = isset($user->get('field_veriface')->first()->session_id) ? $user->get('field_veriface')->first()->session_id : '';
+      $this->session_id = isset($user->get('field_veriface')
+          ->first()->session_id) ? $user->get('field_veriface')
+        ->first()->session_id : '';
   }
 
   public function getSessionId() {
